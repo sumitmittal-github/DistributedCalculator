@@ -3,10 +3,14 @@ package com.sumit.api.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumit.api.SQS.AmazonSQSMessage;
+import com.sumit.api.entity.Calculation;
 import com.sumit.api.entity.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CalculatorUtils {
@@ -50,5 +54,20 @@ public class CalculatorUtils {
         }
         log.info("Exit CalculatorService.validateAndSendSQSMessage() !!!");
         return amazonSQSMessage;
+    }
+
+    // Check if we have already calculated this AmazonSQSMessage values in our previous calculations
+    public Calculation checkAndReturnIfAlreadyCalculated(AmazonSQSMessage amazonSQSMessage, List<Calculation> dbCalculationList){
+        String newRequestOperationType = amazonSQSMessage.getOperationType().toString();
+        String newRequestCommaSeparatedInputs = amazonSQSMessage.getInputs().stream().map(a->a.toString()).collect(Collectors.joining(","));
+
+        // compare calculations object of DB and new AmazonSQSMessage message received to perform calculate
+        List<Calculation> matchedList = dbCalculationList.stream().filter(dbObj -> dbObj.getOperationType().equalsIgnoreCase(newRequestOperationType) && dbObj.getInputStr().equalsIgnoreCase(newRequestCommaSeparatedInputs)).collect(Collectors.toList());
+
+        // if found return the same object else return null
+        if(matchedList != null && matchedList.size()!=0)
+            return matchedList.get(0);
+        else
+            return null;
     }
 }

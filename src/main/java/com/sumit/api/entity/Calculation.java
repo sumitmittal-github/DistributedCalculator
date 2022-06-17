@@ -19,6 +19,12 @@ public class Calculation {
     public Calculation() {
     }
 
+    public Calculation(String operationType, String inputStr, Double result) {
+        this.operationType = operationType;
+        this.inputStr = inputStr;
+        this.result = result;
+    }
+
     public Calculation(Long id, String operationType, String inputStr, Double result) {
         this.id=id;
         this.operationType = operationType;
