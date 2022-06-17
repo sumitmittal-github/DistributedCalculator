@@ -1,39 +1,41 @@
 package com.sumit.api.entity;
 
 import javax.persistence.Entity;
-import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Calculation {
 
-    private List<Long> inputs;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private OperationType operationType;
-    private Long result;
+    private String inputStr;
+    private Double result;
 
     public Calculation() {
     }
 
-    public Calculation(List<Long> inputs, OperationType operationType, Long result) {
-        this.inputs = inputs;
+    public Calculation(Long id, OperationType operationType, String inputStr, Double result) {
+        this.id=id;
         this.operationType = operationType;
+        this.inputStr = inputStr;
         this.result = result;
     }
 
     @Override
     public String toString() {
-        return "Calculation{" +
-                "inputs=" + inputs +
-                ", operationType=" + operationType +
-                ", result=" + result +
-                '}';
+        return "Calculation{ id=" + id + ", operationType=" + operationType + ", inputStr=" + inputStr + ", result=" + result + '}';
     }
 
-    public List<Long> getInputs() {
-        return inputs;
+    public Long getId() {
+        return id;
     }
 
-    public void setInputs(List<Long> inputs) {
-        this.inputs = inputs;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public OperationType getOperationType() {
@@ -44,11 +46,19 @@ public class Calculation {
         this.operationType = operationType;
     }
 
-    public Long getResult() {
+    public String getInputStr() {
+        return inputStr;
+    }
+
+    public void setInputStr(String inputStr) {
+        this.inputStr = inputStr;
+    }
+
+    public Double getResult() {
         return result;
     }
 
-    public void setResult(Long result) {
+    public void setResult(Double result) {
         this.result = result;
     }
 }
