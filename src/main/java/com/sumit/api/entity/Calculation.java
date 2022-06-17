@@ -9,16 +9,16 @@ import javax.persistence.Id;
 public class Calculation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private OperationType operationType;
+    private String operationType;
     private String inputStr;
     private Double result;
 
     public Calculation() {
     }
 
-    public Calculation(Long id, OperationType operationType, String inputStr, Double result) {
+    public Calculation(Long id, String operationType, String inputStr, Double result) {
         this.id=id;
         this.operationType = operationType;
         this.inputStr = inputStr;
@@ -38,11 +38,11 @@ public class Calculation {
         this.id = id;
     }
 
-    public OperationType getOperationType() {
+    public String getOperationType() {
         return operationType;
     }
 
-    public void setOperationType(OperationType operationType) {
+    public void setOperationType(String operationType) {
         this.operationType = operationType;
     }
 

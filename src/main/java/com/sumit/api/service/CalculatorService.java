@@ -33,7 +33,7 @@ public class CalculatorService {
 
         //STEP-3 : Prepare Calculation Entity object for Database
         Calculation calculation = new Calculation();
-        calculation.setOperationType(amazonSQSMessage.getOperationType());
+        calculation.setOperationType(amazonSQSMessage.getOperationType().toString());
         String commaSeparatedInputs = amazonSQSMessage.getInputs().stream()
                                                                   .map(a->a.toString())
                                                                   .collect(Collectors.joining(","));
