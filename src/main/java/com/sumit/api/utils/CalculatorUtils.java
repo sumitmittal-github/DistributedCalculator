@@ -1,5 +1,7 @@
 package com.sumit.api.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumit.api.SQS.AmazonSQSMessage;
 import com.sumit.api.entity.OperationType;
 import org.slf4j.Logger;
@@ -12,6 +14,8 @@ public class CalculatorUtils {
     private final Logger log = LoggerFactory.getLogger(CalculatorUtils.class);
 
     public Double calculate(AmazonSQSMessage amazonSQSMessage){
+        log.info("Entry CalculatorUtils.calculate() ...");
+        log.info("AmazonSQSMessage :"+amazonSQSMessage);
         Double result = 0.0;
         if(OperationType.ADD == amazonSQSMessage.getOperationType()) {
             result = amazonSQSMessage.getInputs().stream().reduce(0.0, Double::sum);
@@ -29,12 +33,22 @@ public class CalculatorUtils {
             result = amazonSQSMessage.getInputs().get(0) / amazonSQSMessage.getInputs().get(1);
             log.info("Result of Division is : " + result);
         }
+        log.info("Exit CalculatorService.calculate() !!!");
         return result;
     }
 
-    public AmazonSQSMessage parseStringIntoAmazonSQSMessage(String message) {
-        AmazonSQSMessage amazonSQSMessage = new AmazonSQSMessage();
-
+    public AmazonSQSMessage parseJsonIntoAmazonSQSMessage(String jsonMessage) {
+        log.info("Entry CalculatorUtils.parseStringIntoAmazonSQSMessage() ...");
+        log.info("AmazonSQSMessage JSON :"+jsonMessage);
+        AmazonSQSMessage amazonSQSMessage = null;
+        try{
+            ObjectMapper objectMapper = new ObjectMapper();
+            amazonSQSMessage = objectMapper.readValue(jsonMessage, AmazonSQSMessage.class);
+            log.info("AmazonSQSMessage Object :"+amazonSQSMessage);
+        } catch(Exception e){
+            log.error("Exception occurred while parsing JSON into Object :"+e.getMessage());
+        }
+        log.info("Exit CalculatorService.validateAndSendSQSMessage() !!!");
         return amazonSQSMessage;
     }
 }

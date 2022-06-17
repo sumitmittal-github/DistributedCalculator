@@ -23,14 +23,15 @@ public class CalculatorService {
     private CalculatorUtils calculatorUtils;
 
     public void calculateAndStoreInDB(String message){
-
+        log.info("Entry CalculatorService.calculateAndStoreInDB() ...");
         //STEP-1 : parse String message to Amazon SQS message
-        AmazonSQSMessage amazonSQSMessage = calculatorUtils.parseStringIntoAmazonSQSMessage(message);
+        AmazonSQSMessage amazonSQSMessage = calculatorUtils.parseJsonIntoAmazonSQSMessage(message);
 
         //STEP-2 : calculate the result
         Double result = calculatorUtils.calculate(amazonSQSMessage);
+        log.info("Calculation result :"+result);
 
-        //STEP-2 : Prepare Calculation Entity object
+        //STEP-3 : Prepare Calculation Entity object for Database
         Calculation calculation = new Calculation();
         calculation.setOperationType(amazonSQSMessage.getOperationType());
         String commaSeparatedInputs = amazonSQSMessage.getInputs().stream()
@@ -38,9 +39,13 @@ public class CalculatorService {
                                                                   .collect(Collectors.joining(","));
         calculation.setInputStr(commaSeparatedInputs);
         calculation.setResult(result);
+        log.info("Calculation DB Object :"+calculation);
 
-        //STEP-3 : Save result in DB
+        //STEP-4 : Save result in DB
+        log.info("Saving Calculation Object in DB ..");
         calculatorRepository.save(calculation);
+        log.info("Saved Calculation Object in DB !!");
+        log.info("Exit CalculatorService.calculateAndStoreInDB() !!!");
     }
 
 
