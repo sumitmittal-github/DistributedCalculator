@@ -79,6 +79,7 @@
 				<version>2.7.0</version>
 			</plugin>
 		</plugins>
+		<finalName>BackendCalculatorAPI</finalName>
 	</build>
 
 </project>
